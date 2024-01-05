@@ -1,0 +1,13 @@
+extends layout
+
+block content
+  h1= title
+
+  h2 Movie database
+
+  p The database has the following record counts:
+
+  ul
+    li #[strong Movies:] !{movies}
+    li #[strong Directors:] !{directors}
+    li #[strong Comments:] !{comments}

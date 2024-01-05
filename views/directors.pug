@@ -1,0 +1,15 @@
+extends layout
+
+block content 
+    h1.title= title 
+    .flex-container
+        each director in directors
+            .flex-item
+                .thumbnail
+                    img(src="https://placehold.co/300x300")
+                .caption
+                    h3= director.name
+                    p= `${director.date_of_birth_formatted} - ${director.date_of_death_formatted}`
+                    p
+                        a.btn.btn-primary(href='/catalog/director/' + director._id) View Details »
+

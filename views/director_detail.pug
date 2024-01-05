@@ -1,0 +1,11 @@
+extends layout
+
+block content
+  h1 #{director.name}
+  p #{director.date_of_birth_formatted} - #{director.date_of_death_formatted}
+  h2 Movies
+  ul
+    each movie in movies
+      li
+        a(href=`/catalog/movie/${movie.id}`) #{movie.title}
+  include comments.pug

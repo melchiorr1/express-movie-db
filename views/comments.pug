@@ -1,0 +1,7 @@
+h3 Comments
+ul
+    each comment in comments
+      li
+        p= comment.comment
+        p Posted by #{comment.username}
+        p Posted on #{comment.date_formatted}

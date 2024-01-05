@@ -1,0 +1,15 @@
+extends layout 
+
+block content
+  h1.title= title
+  
+  .flex-container
+    each movie in movies
+      .flex-item
+        .thumbnail
+          img(src="https://placehold.co/300x300")
+        .caption
+          h3= `${movie.title} (${movie.year})`
+          p= movie.summary
+          p
+            a.btn.btn-primary(href='/catalog/movie/' + movie._id) View Details »

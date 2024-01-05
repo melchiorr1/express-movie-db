@@ -1,0 +1,25 @@
+.content{
+    padding: 1rem;
+}
+
+.title{
+    text-align: center;
+    margin-bottom: 2rem;
+
+}
+
+.flex-container{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 4rem;
+}
+
+.flex-item{
+    max-width: 300px;;
+    outline: 1px solid #ccc;
+}
+
+.flex-item .caption{
+    padding: 1rem;
+}

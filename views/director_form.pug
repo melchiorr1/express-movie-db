@@ -1,0 +1,23 @@
+extends layout
+
+block content
+    form(method='POST' enctype="multipart/form-data")
+        div.form-group
+            label(for='first_name') First Name:
+            input#first_name.form-control(type='text' placeholder='First name (Christian)' name='first_name' required value=(undefined===director ? '' : director.first_name) )
+            label(for='family_name') Family Name:
+            input#family_name.form-control(type='text' placeholder='Family name (Surname)' name='family_name' required value=(undefined===director ? '' : director.family_name))
+        div.form-group
+            label(for='date_of_birth') Date of birth:
+            input#date_of_birth.form-control(type='date' name='date_of_birth' required value=(undefined===director ? '' : director.date_of_birth_yyyy_mm_dd) )
+            label(for='date_of_death') Date of death:
+            input#date_of_death.form-control(type='date' name='date_of_death' value=(undefined===director ? '' : director.date_of_death_yyyy_mm_dd) )
+        div.form-group
+            div Image:
+            input(type="file" accept="image/*" name="image" id="image")
+        button.btn.btn-primary(type='submit') Submit
+
+    if errors
+        ul
+            for error in errors
+                li!= error.msg

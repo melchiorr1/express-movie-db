@@ -1,7 +1,19 @@
 h3 Comments
-ul
-    each comment in comments
-      li
-        p= comment.comment
-        p Posted by #{comment.username}
-        p Posted on #{comment.date_formatted}
+div.add-comment
+  form(method='POST')
+    div.form-group
+      input.form-control(type='text', name='username', placeholder='Your name')
+    div.form-group
+      textarea.form-control(name='comment', placeholder='Your comment')
+    div.form-group
+      input.btn.btn-primary(type='submit', value='Add comment')
+if errors
+    ul
+        for error in errors
+            li!= error.msg
+ul.list-group
+  each comment in comments
+    li.list-group-item.mb-3
+      h5= comment.username
+      p= comment.comment
+      small.text-muted Posted on #{comment.date_formatted}

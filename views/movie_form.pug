@@ -1,0 +1,32 @@
+extends layout
+
+block content
+    form(method='POST' enctype="multipart/form-data")
+        div.form-group
+            label(for='title') Title:
+            input#title.form-control(type='text' placeholder='Fight Club' name='title' required value=(undefined===movie ? '' : movie.title) )
+            label(for='director') Director:
+            select.form-control#director(name='director' required)
+                option(value='') -- Select Director --
+                    for director in directors
+                        if movie
+                            if director._id.toString()===movie.director._id.toString()
+                                option(value=director._id selected) #{director.name}
+                            else
+                                option(value=director._id) #{director.name}
+                        else
+                            option(value=director._id) #{director.name}
+        div.form-group
+            label(for='year') Year:
+            input#year.form-control(type='number' name='year' required value=(undefined===movie ? '' : movie.year) )
+            label(for='summary') Summary:
+            textarea#summary.form-control(type='text' placeholder='An insomniac office worker and a devil-may-care soapmaker form an underground fight club that evolves into something much, much more.' name='summary' rows='3' required)= undefined===movie ? '' : movie.summary
+        div.form-group
+            div Image:
+            input(type="file" accept="image/*" name="image" id="image")
+        button.btn.btn-primary(type='submit') Submit
+
+    if errors
+        ul
+            for error in errors
+                li!= error.msg

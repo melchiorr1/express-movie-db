@@ -1,6 +1,7 @@
 extends layout
 
 block content
+  img.thumbnail-img(src=movie.image, alt='Movie image')
   h1= movie.title
   h2 Directed by 
     a(href=`/catalog/director/${movie.director.id}`) #{movie.director.name}

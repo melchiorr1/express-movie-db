@@ -1,12 +1,15 @@
 extends layout
 
 block content 
-    h1.title= title 
+    h1.title= title
+    div.add
+        p='This is a list of all the directors in the library.'
+        a.btn.btn-primary(href='/catalog/director/create') Add Director 
     .flex-container
         each director in directors
             .flex-item
                 .thumbnail
-                    img(src="https://placehold.co/300x300")
+                    img.thumbnail-img(src=director.image alt="Director image")
                 .caption
                     h3= director.name
                     p= `${director.date_of_birth_formatted} - ${director.date_of_death_formatted}`

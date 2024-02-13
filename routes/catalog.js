@@ -9,9 +9,21 @@ router.get('/', movieController.index);
 
 router.get('/movies', movieController.movies);
 
+router.get('/movie/create', movieController.movie_create_get);
+
+router.post('/movie/create', movieController.movie_create_post);
+
+router.post('/movie/:id', movieController.movie_comment_post);
+
 router.get('/movie/:id', movieController.movie_detail);
 
 router.get('/directors', directorController.directors);
+
+router.get('/director/create', directorController.director_create_get);
+
+router.post('/director/create', directorController.director_create_post);
+
+router.post('/director/:id', directorController.director_comment_post);
 
 router.get('/director/:id', directorController.directors_detail);
 

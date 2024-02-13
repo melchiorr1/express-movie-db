@@ -2,12 +2,18 @@ extends layout
 
 block content
   h1.title= title
+  div.add
+    p Welcome to the movie list
+    a.btn.btn-primary(href='/catalog/movie/create') Add Movie
   
   .flex-container
     each movie in movies
       .flex-item
         .thumbnail
-          img(src="https://placehold.co/300x300")
+          if movie.image
+            img.thumbnail-img(src=movie.image, alt='Movie image')
+          else
+            img.thumbnail-img(src="https://placehold.co/300x300", alt='Movie image')
         .caption
           h3= `${movie.title} (${movie.year})`
           p= movie.summary

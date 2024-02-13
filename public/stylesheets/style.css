@@ -4,8 +4,6 @@
 
 .title{
     text-align: center;
-    margin-bottom: 2rem;
-
 }
 
 .flex-container{
@@ -16,10 +14,27 @@
 }
 
 .flex-item{
-    max-width: 300px;;
+    width: 300px;
     outline: 1px solid #ccc;
 }
 
 .flex-item .caption{
     padding: 1rem;
+}
+
+.add{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-bottom: 1rem;
+}
+
+.thumbnail-img{
+    width: 300px;
+    height: 300px;
+    object-fit: cover;
+}
+
+.add-comment{
+    max-width: 300px;
 }

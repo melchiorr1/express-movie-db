@@ -2,6 +2,21 @@ const Movie = require("../models/movie");
 const Director = require("../models/director");
 const Comment = require("../models/comment");
 const asyncHandler = require("express-async-handler");
+const { body, validationResult } = require("express-validator");
+const multer = require("multer");
+const path = require("path");
+const upload = multer({
+  limits: {
+    fileSize: 1024 * 1024,
+  },
+  dest: "public/uploads/",
+  fileFilter: function (req, file, cb) {
+    if (!file.originalname.match(/\.(jpg|jpeg|png|gif)$/)) {
+      return cb(new Error("Only image files are allowed!"));
+    }
+    cb(null, true);
+  },
+});
 
 exports.index = asyncHandler(async (req, res, next) => {
   const [movies, directors, comments] = await Promise.all([
@@ -10,7 +25,7 @@ exports.index = asyncHandler(async (req, res, next) => {
     Comment.countDocuments({}).exec(),
   ]);
 
-  res.render("index", { title: "Welcome", movies, directors, comments});
+  res.render("index", { title: "Welcome", movies, directors, comments });
 });
 
 exports.movies = asyncHandler(async (req, res, next) => {
@@ -20,9 +35,121 @@ exports.movies = asyncHandler(async (req, res, next) => {
 
 exports.movie_detail = asyncHandler(async (req, res, next) => {
   const movie = await Movie.findById(req.params.id)
-  .populate("director")
-  .populate("comments")
-  .exec();
+    .populate("director")
+    .populate("comments")
+    .exec();
 
   res.render("movie_detail", { movie, comments: movie.comments });
 });
+
+exports.movie_create_get = asyncHandler(async (req, res, next) => {
+  const directors = await Director.find({}).exec();
+  res.render("movie_form", { title: "Create Movie", directors });
+});
+
+exports.movie_create_post = [
+  upload.single("image"),
+  body("title")
+    .trim()
+    .isLength({ min: 1 })
+    .escape()
+    .withMessage("Title must be specified.")
+    .matches(/^[A-Za-z0-9ąćęłńóśźżĄĆĘŁŃÓŚŹŻ .,!?-]+$/)
+    .withMessage("Title has non-alphanumeric characters."),
+  body("director")
+    .trim()
+    .isLength({ min: 1 })
+    .escape()
+    .withMessage("Director must be specified.")
+    .matches(/^[A-Za-z0-9ąćęłńóśźżĄĆĘŁŃÓŚŹŻ .,!?-]+$/)
+    .withMessage("Director has non-alphanumeric characters."),
+  body("summary")
+    .trim()
+    .isLength({ min: 1 })
+    .escape()
+    .withMessage("Summary must be specified.")
+    .matches(/^[A-Za-z0-9ąćęłńóśźżĄĆĘŁŃÓŚŹŻ .,!?-]+$/)
+    .withMessage("Summary has non-alphanumeric characters."),
+  body("year")
+    .trim()
+    .isLength({ min: 1 })
+    .escape()
+    .withMessage("Year must be specified.")
+    .isNumeric()
+    .withMessage("Year has non-numeric characters."),
+  asyncHandler(async (req, res, next) => {
+    const errors = validationResult(req);
+
+    let filepath;
+    if (req.file) {
+      let path_arr = req.file.path.split(path.sep);
+      filepath = path.join("/", path_arr[1], path_arr[2]);
+    } else {
+      filepath = "";
+    }
+
+    const movie = new Movie({
+      title: req.body.title,
+      director: req.body.director,
+      summary: req.body.summary,
+      year: req.body.year,
+      image: filepath,
+    });
+
+    if (!errors.isEmpty()) {
+      const directors = await Director.find({}).exec();
+      res.render("movie_form", {
+        title: "Create Movie",
+        directors,
+        movie,
+        errors: errors.array(),
+      });
+      return;
+    } else {
+      await movie.save();
+      res.redirect(movie.url);
+    }
+  }),
+];
+
+exports.movie_comment_post = [
+  body("comment")
+    .trim()
+    .isLength({ min: 1 })
+    .escape()
+    .withMessage("Comment must be specified.")
+    .matches(/^[A-Za-z0-9ąćęłńóśźżĄĆĘŁŃÓŚŹŻ .,!?-]+$/)
+    .withMessage("Comment has non-alphanumeric characters."),
+  body("username")
+    .trim()
+    .isLength({ min: 1 })
+    .escape()
+    .withMessage("Username must be specified.")
+    .matches(/^[A-Za-z0-9ąćęłńóśźżĄĆĘŁŃÓŚŹŻ .,!?-]+$/)
+    .withMessage("Username has non-alphanumeric characters."),
+  asyncHandler(async (req, res, next) => {
+    const errors = validationResult(req);
+
+    const movie = await Movie.findById(req.params.id).exec();
+
+    const comment = new Comment({
+      username: req.body.username,
+      comment: req.body.comment,
+      movie: movie._id,
+    });
+
+    if (!errors.isEmpty()) {
+      res.render("movie_detail", {
+        movie,
+        comments: movie.comments,
+        errors: errors.array(),
+      });
+      return;
+    } else {
+      await comment.save();
+      movie.comments.push(comment);
+      await movie.save();
+      res.redirect(movie.url);
+    }
+  }),
+];

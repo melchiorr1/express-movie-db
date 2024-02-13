@@ -10,6 +10,7 @@ const DirectorSchema = new Schema({
   date_of_birth: { type: Date, required: true },
   date_of_death: { type: Date },
   comments: [{ type: Schema.Types.ObjectId, ref: "Comment" }],
+  image: {type: String},
 });
 
 // Virtual for director's full name

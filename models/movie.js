@@ -12,6 +12,7 @@ const MovieSchema = new Schema({
   summary: { type: String, required: true },
   year: { type: Number, required: true },
   comments: [{ type: Schema.Types.ObjectId, ref: "Comment" }],
+  image: { type: String },
 });
 
 // Virtual for movie's URL

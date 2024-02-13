@@ -1,6 +1,7 @@
 extends layout
 
 block content
+  img.thumbnail-img(src=director.image alt="Director image")
   h1 #{director.name}
   p #{director.date_of_birth_formatted} - #{director.date_of_death_formatted}
   h2 Movies

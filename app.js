@@ -24,6 +24,8 @@ app.set("views", "./views");
 app.set("view engine", "pug");
 
 // Middleware
+app.use(express.urlencoded({extended: true}));
+app.use(express.json()) // To parse the incoming requests with JSON payloads
 app.use(express.static("./public"));
 
 // Routes

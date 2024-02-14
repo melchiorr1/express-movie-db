@@ -1,0 +1,25 @@
+extends layout
+
+block content
+
+    h1 #{movie.title}
+
+    if comments.length
+
+        p #[strong Deleting this movie will result in deleting these comments.]
+        div(style='margin-left:20px;margin-top:20px')
+            h4 Comments
+            ul.list-group
+                each comment in comments
+                    li.list-group-item.mb-3
+                        h5= comment.username
+                        p= comment.comment
+                        small.text-muted Posted on #{comment.date_formatted}
+
+    p Do you really want to delete this movie?
+
+    form(method='POST')
+        div.form-group
+            input.form-control(type='hidden' name='movieid', value=movie._id )
+
+        button.btn.btn-danger(type='submit') Delete

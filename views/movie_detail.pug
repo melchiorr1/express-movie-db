@@ -7,4 +7,5 @@ block content
     a(href=`/catalog/director/${movie.director.id}`) #{movie.director.name}
   p Year: #{movie.year}
   p Summary: #{movie.summary}
+  a.btn.btn-danger(href=`/catalog/movie/${movie._id}/delete`) Delete
   include comments.pug

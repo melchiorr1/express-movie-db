@@ -17,6 +17,10 @@ router.post('/movie/:id', movieController.movie_comment_post);
 
 router.get('/movie/:id', movieController.movie_detail);
 
+router.get('/movie/:id/delete', movieController.movie_delete_get);
+
+router.post('/movie/:id/delete', movieController.movie_delete_post);
+
 router.get('/directors', directorController.directors);
 
 router.get('/director/create', directorController.director_create_get);

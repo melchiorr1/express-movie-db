@@ -5,6 +5,7 @@ const asyncHandler = require("express-async-handler");
 const { body, validationResult } = require("express-validator");
 const multer = require("multer");
 const path = require("path");
+const movie = require("../models/movie");
 const upload = multer({
   limits: {
     fileSize: 1024 * 1024,
@@ -153,3 +154,17 @@ exports.movie_comment_post = [
     }
   }),
 ];
+
+exports.movie_delete_post = asyncHandler(async (req, res, next) => {
+  // Delete comments associated with the movie
+  const movie = await Movie.findById(req.params.id).exec();
+  const comments = movie.comments;
+  await Comment.deleteMany({ _id: { $in: comments } });
+  await movie.deleteOne();
+  res.redirect("/catalog/movies");
+});
+
+exports.movie_delete_get = asyncHandler(async (req, res, next) => {
+  const movie = await Movie.findById(req.params.id).populate("comments").exec();
+  res.render("movie_delete", { movie, comments: movie.comments});
+});

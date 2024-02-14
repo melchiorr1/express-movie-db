@@ -1,7 +1,7 @@
 const Director = require("../models/director");
 const Comment = require("../models/comment");
+const Movie = require("../models/movie");
 const asyncHandler = require("express-async-handler");
-const movie = require("../models/movie");
 const { body, validationResult } = require("express-validator");
 
 const multer = require("multer");
@@ -50,7 +50,7 @@ exports.directors_detail = asyncHandler(async (req, res, next) => {
   const director = await Director.findById(req.params.id)
     .populate("comments")
     .exec();
-  const movies = await movie
+  const movies = await Movie
     .find({ director: req.params.id })
     .sort([["year", "ascending"]])
     .exec();
@@ -131,7 +131,7 @@ exports.director_comment_post = [
       .populate("comments")
       .exec();
 
-    const movies = await movie
+    const movies = await Movie
       .find({ director: req.params.id })
       .sort([["year", "ascending"]])
       .exec();
@@ -159,3 +159,76 @@ exports.director_comment_post = [
   }),
 ];
 
+exports.director_update_get = asyncHandler(async (req, res, next) => {
+  const director = await Director.findById(req.params.id).exec();
+  res.render("director_form", { title: "Update Director", director });
+});
+
+exports.director_update_post = [
+  upload.single("image"),
+  ...validateDirector,
+  asyncHandler(async (req, res, next) => {
+    const errors = validationResult(req);
+
+    let old_director = await Director.findById(req.params.id).exec();
+    let filepath;
+    if (req.file) {
+      let path_arr = req.file.path.split(path.sep);
+      filepath = path.join("/", path_arr[1], path_arr[2]);
+    } else {
+      filepath = old_director.image;
+    }
+
+    const director = new Director({
+      first_name: req.body.first_name,
+      family_name: req.body.family_name,
+      date_of_birth: req.body.date_of_birth,
+      date_of_death: req.body.date_of_death,
+      image: filepath,
+      comments: old_director.comments,
+      _id: req.params.id,
+    });
+
+    if (!errors.isEmpty()) {
+      res.render("director_form", {
+        title: "Update Director",
+        director,
+        errors: errors.array(),
+      });
+      return;
+    } else {
+      await Director.findByIdAndUpdate(req.params.id, director, {});
+      res.redirect(director.url);
+    }
+  }),
+];
+
+exports.director_delete_get = asyncHandler(async (req, res, next) => {
+  const director = await Director.findById(req.params.id)
+    .populate("comments")
+    .exec();
+  const movies = await Movie.find({ director: req.params.id }).exec();
+  res.render("director_delete", {
+    director,
+    comments: director.comments,
+    movies,
+  });
+});
+
+exports.director_delete_post = asyncHandler(async (req, res, next) => {
+  const movies = await Movie.find({ director: req.params.id }).exec();
+  if (movies.length > 0) {
+    res.render("director_delete", {
+      director,
+      comments: director.comments,
+      movies,
+    });
+    return;
+  } else {
+    const director = await Director.findById(req.params.id).exec();
+    const comments = director.comments;
+    await Comment.deleteMany({ _id: { $in: comments } });
+    await director.deleteOne();
+    res.redirect("/catalog/directors");
+  }
+});

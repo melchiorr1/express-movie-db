@@ -19,6 +19,28 @@ const upload = multer({
   },
 });
 
+const validateDirector = [
+  body("first_name")
+    .trim()
+    .isLength({ min: 1 })
+    .escape()
+    .withMessage("First name must be specified.")
+    .isAlphanumeric()
+    .withMessage("First name has non-alphanumeric characters."),
+  body("family_name")
+    .trim()
+    .isLength({ min: 1 })
+    .escape()
+    .withMessage("Family name must be specified.")
+    .isAlphanumeric()
+    .withMessage("Family name has non-alphanumeric characters."),
+  body("date_of_birth", "Invalid date of birth").isISO8601().toDate(),
+  body("date_of_death", "Invalid date of death")
+    .optional({ values: "falsy" })
+    .isISO8601()
+    .toDate(),
+];
+
 exports.directors = asyncHandler(async (req, res, next) => {
   const directors = await Director.find({}).exec();
   res.render("directors", { title: "Directors", directors });
@@ -47,25 +69,7 @@ exports.director_create_get = (req, res, next) => {
 exports.director_create_post = [
   upload.single("image"),
   // Validate and sanitize fields.
-  body("first_name")
-    .trim()
-    .isLength({ min: 1 })
-    .escape()
-    .withMessage("First name must be specified.")
-    .isAlphanumeric()
-    .withMessage("First name has non-alphanumeric characters."),
-  body("family_name")
-    .trim()
-    .isLength({ min: 1 })
-    .escape()
-    .withMessage("Family name must be specified.")
-    .isAlphanumeric()
-    .withMessage("Family name has non-alphanumeric characters."),
-  body("date_of_birth", "Invalid date of birth").isISO8601().toDate(),
-  body("date_of_death", "Invalid date of death")
-    .optional({ values: "falsy" })
-    .isISO8601()
-    .toDate(),
+  ...validateDirector,
   // Process request after validation and sanitization.
   asyncHandler(async (req, res, next) => {
     // Extract the validation errors from a request.
@@ -154,3 +158,4 @@ exports.director_comment_post = [
     }
   }),
 ];
+

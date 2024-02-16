@@ -117,13 +117,6 @@ exports.director_comment_post = [
     .withMessage("Comment must be specified.")
     .matches(/^[A-Za-z0-9ąćęłńóśźżĄĆĘŁŃÓŚŹŻ .,!?-]+$/)
     .withMessage("Comment has non-alphanumeric characters."),
-  body("username")
-    .trim()
-    .isLength({ min: 1 })
-    .escape()
-    .withMessage("Username must be specified.")
-    .matches(/^[A-Za-z0-9ąćęłńóśźżĄĆĘŁŃÓŚŹŻ .,!?-]+$/)
-    .withMessage("Username has non-alphanumeric characters."),
   asyncHandler(async (req, res, next) => {
     const errors = validationResult(req);
 
@@ -137,7 +130,7 @@ exports.director_comment_post = [
       .exec();
 
     const comment = new Comment({
-      username: req.body.username,
+      username: req.user.username,
       comment: req.body.comment,
       director: director._id,
     });

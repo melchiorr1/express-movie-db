@@ -1,16 +1,17 @@
 const express = require('express');
 const authController = require('../controllers/authController');
+const { ensureAuthenticated, ensureNotAuthenticated } = require("../middleware/ensureAuthenticated");
 
 const router = express.Router();
 
-router.get('/login', authController.login_get);
+router.get('/login', ensureNotAuthenticated, authController.login_get);
 
-router.post('/login', authController.login_post);
+router.post('/login', ensureNotAuthenticated, authController.login_post);
 
-router.get('/register', authController.register_get);
+router.get('/register', ensureNotAuthenticated, authController.register_get);
 
-router.post('/register', authController.register_post);
+router.post('/register', ensureNotAuthenticated, authController.register_post);
 
-router.post('/logout', authController.logout_post);
+router.post('/logout', ensureAuthenticated, authController.logout_post);
 
 module.exports = router;

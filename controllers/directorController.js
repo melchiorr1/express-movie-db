@@ -49,6 +49,7 @@ exports.directors = asyncHandler(async (req, res, next) => {
 exports.directors_detail = asyncHandler(async (req, res, next) => {
   const director = await Director.findById(req.params.id)
     .populate("comments")
+    .populate("createdBy")
     .exec();
   const movies = await Movie
     .find({ director: req.params.id })

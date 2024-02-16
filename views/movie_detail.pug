@@ -8,7 +8,7 @@ block content
   p Year: #{movie.year}
   p Summary: #{movie.summary}
   p.lead Created by: <b>#{movie.createdBy.username}</b>
-  if user.id == movie.createdBy.id
+  if user && user.id == movie.createdBy.id
     a.btn.btn-primary.mr-2.mb-2(href=`/catalog/movie/${movie._id}/update`) Update
     a.btn.btn-danger.mb-2(href=`/catalog/movie/${movie._id}/delete`) Delete
   include comments.pug

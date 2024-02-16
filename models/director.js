@@ -11,6 +11,7 @@ const DirectorSchema = new Schema({
   date_of_death: { type: Date },
   comments: [{ type: Schema.Types.ObjectId, ref: "Comment" }],
   image: {type: String},
+  createdBy: { type: Schema.Types.ObjectId, ref: "User" },
 });
 
 // Virtual for director's full name

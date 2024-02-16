@@ -4,12 +4,13 @@ block content
   img.thumbnail-img(src=director.image alt="Director image")
   h1 #{director.name}
   p #{director.date_of_birth_formatted} - #{director.date_of_death_formatted}
+  p.lead Created by: <b>#{director.createdBy.username}</b>
   h2 Movies
   ul
     each movie in movies
       li
         a(href=`/catalog/movie/${movie.id}`) #{movie.title}
-  if user
+  if user && user.id == director.createdBy.id
     a.btn.btn-primary.mr-2.mb-2(href=`/catalog/director/${director.id}/update`) Update
     a.btn.btn-danger.mb-2(href=`/catalog/director/${director.id}/delete`) Delete
   include comments.pug

@@ -2,7 +2,7 @@ const express = require("express");
 const movieController = require("../controllers/movieController");
 const directorController = require("../controllers/directorController");
 const { ensureAuthenticated } = require('../middleware/ensureAuthenticated');
-const { checkMovieCreator } = require('../middleware/checkCreator')
+const { checkMovieCreator, checkDirectorCreator } = require('../middleware/checkCreator');
 
 const router = express.Router();
 
@@ -36,12 +36,12 @@ router.post('/director/:id', ensureAuthenticated, directorController.director_co
 
 router.get('/director/:id', directorController.directors_detail);
 
-router.get('/director/:id/update', ensureAuthenticated, directorController.director_update_get);
+router.get('/director/:id/update', checkDirectorCreator, ensureAuthenticated, directorController.director_update_get);
 
-router.post('/director/:id/update', ensureAuthenticated, directorController.director_update_post);
+router.post('/director/:id/update', checkDirectorCreator, ensureAuthenticated, directorController.director_update_post);
 
-router.get('/director/:id/delete', ensureAuthenticated, directorController.director_delete_get);
+router.get('/director/:id/delete', checkDirectorCreator, ensureAuthenticated, directorController.director_delete_get);
 
-router.post('/director/:id/delete', ensureAuthenticated, directorController.director_delete_post);
+router.post('/director/:id/delete', checkDirectorCreator, ensureAuthenticated, directorController.director_delete_post);
 
 module.exports = router;

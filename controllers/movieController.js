@@ -69,6 +69,7 @@ exports.movie_detail = asyncHandler(async (req, res, next) => {
   const movie = await Movie.findById(req.params.id)
     .populate("director")
     .populate("comments")
+    .populate("createdBy")
     .exec();
 
   res.render("movie_detail", { movie, comments: movie.comments });
@@ -99,6 +100,7 @@ exports.movie_create_post = [
       summary: req.body.summary,
       year: req.body.year,
       image: filepath,
+      createdBy: req.user.id,
     });
 
     if (!errors.isEmpty()) {
@@ -188,13 +190,14 @@ exports.movie_update_post = [
     }
 
     const movie = new Movie({
+      _id: req.params.id,
       title: req.body.title,
       director: req.body.director,
       summary: req.body.summary,
       year: req.body.year,
       image: filepath,
-      _id: req.params.id,
       comments: old_movie.comments,
+      createdBy: old_movie.createdBy,
     });
 
     if (!errors.isEmpty()) {

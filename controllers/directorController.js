@@ -89,6 +89,7 @@ exports.director_create_post = [
       date_of_birth: req.body.date_of_birth,
       date_of_death: req.body.date_of_death,
       image: filepath,
+      createdBy: req.user.id,
     });
 
     if (!errors.isEmpty()) {
@@ -173,13 +174,14 @@ exports.director_update_post = [
     }
 
     const director = new Director({
+      _id: req.params.id,
       first_name: req.body.first_name,
       family_name: req.body.family_name,
       date_of_birth: req.body.date_of_birth,
       date_of_death: req.body.date_of_death,
       image: filepath,
       comments: old_director.comments,
-      _id: req.params.id,
+      createdBy: old_director.createdBy,
     });
 
     if (!errors.isEmpty()) {

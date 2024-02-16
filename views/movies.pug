@@ -4,7 +4,10 @@ block content
   h1.title= title
   div.add
     p Welcome to the movie list
-    a.btn.btn-primary(href='/catalog/movie/create') Add Movie
+    if user
+      a.btn.btn-primary(href='/catalog/movie/create') Add Movie
+    else 
+      a.btn.btn-secondary(href='/auth/login') Please sign in to add a movie
   
   .flex-container
     each movie in movies

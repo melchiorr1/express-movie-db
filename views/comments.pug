@@ -1,12 +1,14 @@
 h3 Comments
-div.add-comment
-  form(method='POST')
-    div.form-group
-      input.form-control(type='text', name='username', placeholder='Your name')
-    div.form-group
-      textarea.form-control(name='comment', placeholder='Your comment')
-    div.form-group
-      input.btn.btn-primary(type='submit', value='Add comment')
+if user
+  div.add-comment
+    form(method='POST')
+      div.form-group
+        textarea.form-control(name='comment', placeholder='Your comment')
+      div.form-group
+        input.btn.btn-primary(type='submit', value='Add comment')
+else
+  a.btn.btn-secondary.mb-3(href='/auth/login') Please sign in to add a comment
+  
 if errors
     ul
         for error in errors

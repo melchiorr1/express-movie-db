@@ -4,7 +4,10 @@ block content
     h1.title= title
     div.add
         p='This is a list of all the directors in the library.'
-        a.btn.btn-primary(href='/catalog/director/create') Add Director 
+        if user
+            a.btn.btn-primary(href='/catalog/director/create') Add Director 
+        else 
+            a.btn.btn-secondary(href='/auth/login') Please sign in to add a director
     .flex-container
         each director in directors
             .flex-item

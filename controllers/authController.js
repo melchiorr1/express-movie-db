@@ -48,6 +48,11 @@ exports.register_get = asyncHandler(async (req, res, next) => {
 });
 
 exports.register_post = asyncHandler(async (req, res, next) => {
+  // TODO: Add validation
+  const users = await User.findOne({ username: req.body.username });
+  if (users) {
+    return res.render("register", { messages: ["Username already exists"] });
+  }
   let user = new User({
     username: req.body.username,
     password: req.body.password,

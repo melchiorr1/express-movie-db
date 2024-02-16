@@ -14,7 +14,7 @@ router.get('/movie/create', ensureAuthenticated, movieController.movie_create_ge
 
 router.post('/movie/create', ensureAuthenticated, movieController.movie_create_post);
 
-router.post('/movie/:id', movieController.movie_comment_post);
+router.post('/movie/:id', ensureAuthenticated, movieController.movie_comment_post);
 
 router.get('/movie/:id', movieController.movie_detail);
 
@@ -32,7 +32,7 @@ router.get('/director/create', ensureAuthenticated, directorController.director_
 
 router.post('/director/create', ensureAuthenticated, directorController.director_create_post);
 
-router.post('/director/:id', directorController.director_comment_post);
+router.post('/director/:id', ensureAuthenticated, directorController.director_comment_post);
 
 router.get('/director/:id', directorController.directors_detail);
 

@@ -5,7 +5,6 @@ const asyncHandler = require("express-async-handler");
 const { body, validationResult } = require("express-validator");
 const multer = require("multer");
 const path = require("path");
-const movie = require("../models/movie");
 const upload = multer({
   limits: {
     fileSize: 1024 * 1024,
